@@ -99,4 +99,19 @@ class UserController extends Controller
 
          return new UserResource($user);
     }
+
+    public function logout(Request $request): JsonResponse {
+        $userLoginId = Auth::user()->id;
+
+        $user = User::where('id', $userLoginId)->first();
+        $user->token = null;
+        $user->save();
+
+        return response()->json([
+            'data' => [
+                'error' => false,
+                'message' => 'logout success!'
+            ]
+        ])->setStatusCode(200);
+    }
 }
