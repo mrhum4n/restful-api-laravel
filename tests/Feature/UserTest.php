@@ -116,4 +116,55 @@ class UserTest extends TestCase
                 ]
             ]);
     }
+
+    public function testGetUserSuccess() {
+        // membuat user seed
+        $this->seed([UserSeeder::class]);
+
+        // membuat request
+        $this->get('api/user/current', [
+            'Authorization' => 'test_token'
+        ])->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'username' => 'admin',
+                    'name' => 'Admin ne',
+                    'token' => 'test_token'
+                ]
+            ]);
+    }
+
+    public function testGetUserUnauthorize() {
+        // membuat user seed
+        $this->seed([UserSeeder::class]);
+
+        // membuat request
+        $this->get('api/user/current')
+        ->assertStatus(401)
+            ->assertJson([
+                'errors' => [
+                    'message' => [
+                        'unauthorized'
+                    ]
+                ]
+            ]);
+    }
+
+    public function testGetUserWithInvalidToken() {
+        // membuat user seed
+        $this->seed([UserSeeder::class]);
+
+        // membuat request
+        $this->get('api/user/current', [
+            'Authorization' => 'token pelih'
+        ])
+        ->assertStatus(401)
+            ->assertJson([
+                'errors' => [
+                    'message' => [
+                        'unauthorized'
+                    ]
+                ]
+            ]);
+    }
 }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\UserLoginRequest;
 use App\Http\Requests\UserRegisterRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -58,5 +59,9 @@ class UserController extends Controller
         $user->save();
 
         return new UserResource($user);
+    }
+
+    public function getUser(Request $request): UserResource {
+        return new UserResource(Auth::user());
     }
 }
