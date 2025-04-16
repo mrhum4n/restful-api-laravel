@@ -167,4 +167,82 @@ class UserTest extends TestCase
                 ]
             ]);
     }
+
+    public function testUpdateNameSuccess() {
+        $this->seed([UserSeeder::class]);
+
+        $oldUser = User::where('username', 'admin')->first();
+
+        $this->put('api/user/current', [
+            'name' => 'admin baru'
+        ], [
+            'Authorization' => 'test_token'
+        ])->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'username' => 'admin',
+                    'name' => 'admin baru',
+                    'token' => 'test_token'
+                ]
+            ]);
+        
+        $newUser = User::where('username', 'admin')->first();
+
+        $this->assertNotEquals($oldUser->name, $newUser->name);
+    }
+
+    public function testUpdatePasswordSuccess() {
+        $this->seed([UserSeeder::class]);
+
+        $oldUser = User::where('username', 'admin')->first();
+
+        $this->put('api/user/current', [
+            'password' => '123'
+        ], [
+            'Authorization' => 'test_token'
+        ])->assertStatus(200)
+            ->assertJson([
+                'data' => [
+                    'username' => 'admin',
+                    'name' => 'Admin ne',
+                    'token' => 'test_token'
+                ]
+            ]);
+        
+        $newUser = User::where('username', 'admin')->first();
+
+        $this->assertNotEquals($oldUser->password, $newUser->password);
+    }
+
+    public function testUpdateNameFailed() {
+        $this->seed([UserSeeder::class]);
+
+        $this->put('api/user/current', [
+            'name' => 'klegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegciklegci'
+        ], [
+            'Authorization' => 'test_token'
+        ])->assertStatus(400)
+            ->assertJson([
+                'errors' => [
+                    'name' => [
+                        'The name field must not be greater than 100 characters.'
+                    ]
+                ]
+            ]);
+    }
+
+    public function testUpdateUserUnauthorize() {
+        $this->seed([UserSeeder::class]);
+
+        $this->put('api/user/current', [
+            'name' => 'admin bangsat'
+        ])->assertStatus(401)
+            ->assertJson([
+                'errors' => [
+                    'message' => [
+                        'unauthorized'
+                    ]
+                ]
+            ]);
+    }
 }

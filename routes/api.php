@@ -13,4 +13,5 @@ Route::get('/hello', function() {
 // route group use middleware auth
 Route::middleware(ApiAuthMiddleware::class)->group(function() {
     Route::get('/user/current', [UserController::class, 'getUser']);
+    Route::put('/user/current', [UserController::class, 'update']);
 });
