@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Models\Contact;
+use Database\Seeders\ContactSeeder;
 use Database\Seeders\UserSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -69,5 +71,54 @@ class ContactTest extends TestCase
                     ]
                 ]
             ]);
+    }
+
+    public function testGetSuccess() {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contactLastCreated = Contact::query()->limit(1)->first();
+
+        $this->get('/api/contact/'.$contactLastCreated->id, [
+            'Authorization' => 'test_token'
+        ])->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'first_name' => 'kedux',
+                'last_name' => 'garong',
+                'email' => 'kedux@gmail.com',
+                'phone' => '08123456789'
+            ]
+        ]);
+    }
+
+    public function testGetNotFound() {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contactLastCreated = Contact::query()->limit(1)->first();
+
+        $this->get('/api/contact/'.($contactLastCreated->id + 1), [
+            'Authorization' => 'test_token'
+        ])->assertStatus(404)
+        ->assertJson([
+            'errors' => [
+                'message' => [
+                    'contact not found!'
+                ]
+            ]
+        ]);
+    }
+
+    public function testGetOtherUserContact() {
+        $this->seed([UserSeeder::class, ContactSeeder::class]);
+        $contactLastCreated = Contact::query()->limit(1)->first();
+
+        $this->get('/api/contact/'.($contactLastCreated->id + 1), [
+            'Authorization' => 'test_token_2'
+        ])->assertStatus(404)
+        ->assertJson([
+            'errors' => [
+                'message' => [
+                    'contact not found!'
+                ]
+            ]
+        ]);
     }
 }
