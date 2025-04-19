@@ -13,6 +13,14 @@ class Address extends Model
     public $timestamps = true;
     public $incrementing = true;
 
+    protected $fillable = [
+        'street',
+        'city',
+        'province',
+        'country',
+        'zip_code'
+    ];
+
     // relasi address ke contact
     public function contact(): BelongsTo {
         return $this->belongsTo(Contact::class, "contact_id", "id");
