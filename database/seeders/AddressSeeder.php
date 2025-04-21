@@ -14,14 +14,25 @@ class AddressSeeder extends Seeder
      */
     public function run(): void
     {
-        $contact = Contact::query()->orderBy('id', 'desc')->limit(1)->first();
-        Address::create([
-            'contact_id' => $contact->id,
-            'street' => 'Jl. Joh Kelod',
-            'city' => 'Denpasar',
-            'province' => 'Bali',
-            'country' => 'Indonesia',
-            'zip_code' => '12345'
-        ]);
+        // $contact = Contact::query()->orderBy('id', 'desc')->limit(1)->first();
+        // Address::create([
+        //     'contact_id' => $contact->id,
+        //     'street' => 'Jl. Joh Kelod',
+        //     'city' => 'Denpasar',
+        //     'province' => 'Bali',
+        //     'country' => 'Indonesia',
+        //     'zip_code' => '12345'
+        // ]);
+
+        // call factory
+        $contacts = Contact::query()->get();
+
+        Address::factory()
+            ->count(5)
+            ->make()
+            ->each(function($address) use ($contacts) {
+                $address->contact_id = $contacts->random()->id;
+                $address->save();
+            });
     }
 }

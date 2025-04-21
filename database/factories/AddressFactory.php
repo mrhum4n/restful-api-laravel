@@ -3,16 +3,13 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Faker\Factory as FakerFactory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Address>
  */
-class UserFactory extends Factory
+class AddressFactory extends Factory
 {
-
     /**
      * Define the model's default state.
      *
@@ -23,10 +20,11 @@ class UserFactory extends Factory
         $faker = FakerFactory::create('id_ID');
 
         return [
-            'name' => $faker->name,
-            'username' => $faker->unique()->userName,
-            'password' => Hash::make('123456'),
-            'token' => Str::uuid()->toString()
+            'street' => $faker->streetAddress,
+            'city' => $faker->city,
+            'province' => $faker->state,
+            'country' => 'Indonesia',
+            'zip_code' => $faker->postcode
         ];
     }
 }

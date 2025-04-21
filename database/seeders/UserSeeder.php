@@ -15,19 +15,22 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // membuat user deafult di table user
-        User::create([
-            'username' => 'admin',
-            'password' => Hash::make('123456'),
-            'name' => 'Admin ne',
-            'token' => 'test_token'
-        ]);
+        // User::create([
+        //     'username' => 'admin',
+        //     'password' => Hash::make('123456'),
+        //     'name' => 'Admin ne',
+        //     'token' => 'test_token'
+        // ]);
 
-        User::create(
-        [
-            'username' => 'admin2',
-            'password' => Hash::make('123456'),
-            'name' => 'admin2',
-            'token' => 'test_token_2'
-        ]);
+        // User::create(
+        // [
+        //     'username' => 'admin2',
+        //     'password' => Hash::make('123456'),
+        //     'name' => 'admin2',
+        //     'token' => 'test_token_2'
+        // ]);
+
+        // call factory
+        User::factory()->count(5)->create();
     }
 }
